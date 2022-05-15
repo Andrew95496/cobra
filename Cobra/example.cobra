@@ -1,0 +1,13 @@
+OPTIONS: parser: "lxml"
+         clean
+         extension= "xlsx"
+         path="usr/bin/env"
+         filenames: date
+;
+
+
+var url = "https://www.python.org/"
+
+var tags = ["h1", "p", "div"]
+
+scrape(url, tag, None, None, OPT, OPT, 2 )
