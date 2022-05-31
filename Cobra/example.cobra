@@ -1,10 +1,4 @@
-OPTIONS: parser: "lxml"
-         clean
-         extension= "xlsx"
-         path="usr/bin/env"
-         filenames: date
-;
-
+OPTIONS: settings.cobra 
 
 var url = "https://www.python.org/"
 
