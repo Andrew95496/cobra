@@ -1,7 +1,9 @@
 # Built-in scrape function
+import threading
 import time
 from dataclasses import dataclass
 from datetime import datetime
+from numpy import append
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -33,20 +35,36 @@ class Scraper:
                 self.extension = extension
                 self.find_all = find_all
 
-    # add data to memory
-    def save_to_memory(self, raw_data, data):
+    def __create_address(self, raw_data, data):
         hash = hashlib.new('sha256')
         raw_data = f'{raw_data}{data}'
         raw_data_binary = raw_data.encode('utf-8')
         hash.update(raw_data_binary)
         address = hash.hexdigest() # Using hashlib to create a unique address for the data in memory
-        user_data = Memory(address, raw_data, data, datetime.now()) # User data memory object #* Objects/memory_object.py
-        saved_memory = File('.memory', 'a') # sends dataframe and raw data to memory #* Objects/file_object.py
-        saved_memory.write(repr(user_data))
-        return repr(user_data) # returns a representation of the Memory Object
+        return address
+
+    # add data to memory
+    def save_to_memory(self, raw_data, data):
+        address = self.__create_address(raw_data, data)
+        append_address = File('State/.address')
+        address_list = append_address.read()
+        if address not in address_list:
+            append_address.write(f'{address}\n')
+            user_data = Memory(address, raw_data, data, datetime.now()) # User data memory object #* Objects/memory_object.py
+            saved_memory = File('.memory') # sends dataframe and raw data to memory #* Objects/file_object.py
+            saved_memory.write(repr(user_data))
+        else:
+            print('CONTENT ALREADY IN MEMORY')
+        return None # returns a representation of the Memory Object
+
+    def __write_to_file(self, data):
+        saved_file  = File(f'Test/file_{datetime.now()}.{self.extension}')
+        saved_file.write_excel(data)
+
 
     
     def simple_scrape(self): # using the initial parameters run a web scrape process
+        threads = []
         res = requests.get(self.url)
         src = res.content
         html = BeautifulSoup(src, 'lxml')
@@ -56,11 +74,15 @@ class Scraper:
         start = time.perf_counter()
         for table in tables: # loop through the tables list write it to a file
             if self.filename == None:
-                saved_file  = File(f'Test/file_{datetime.now()}.{self.extension}', 'w')
-                saved_file.write_excel(table)
+                t = threading.Thread(target=self.__write_to_file, args=[table])
+                t.start()
+                threads.append(t)
+        for thread in threads:
+            thread.join()
         end = time.perf_counter()
         print(end - start)
-        self.save_to_memory(0, table) 
+                # saved_file.write_excel(table)
+        self.save_to_memory(0, tables) 
         print(f'Data Tables Found: {len(tables)}')
         return user_request
 
@@ -79,9 +101,9 @@ class Scraper:
 if __name__ == '__main__':
     x = Scraper('https://en.wikipedia.org/wiki/Computer_science')
     data = x.simple_scrape()
-    y = Scraper('https://en.wikipedia.org/wiki/Miami_Dolphibs')
+    y = Scraper('https://en.wikipedia.org/wiki/Miami_Dolphins')
     data = y.simple_scrape()
-    z= Scraper('https://en.wikipedia.org/wiki/science')
+    z= Scraper('https://en.wikipedia.org/wiki/Baltimore_Ravens')
     data = z.simple_scrape()
     a = Scraper('https://en.wikipedia.org/wiki/nfl')
     data = a.simple_scrape()
