@@ -30,7 +30,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Andrew95496/cobra">
-    <img src="Readme/Trans-Cobra.png" alt="Logo" width="80" height="80">
+    <img src="Readme_Media/Trans-Cobra.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Cobra</h3>
