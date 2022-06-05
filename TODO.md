@@ -1,7 +1,7 @@
 - look up request
 - clean things up
 - create hexadecimal address
-
+- use numba for image arrays
 
 SETTINGS
 - save state
