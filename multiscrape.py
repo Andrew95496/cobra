@@ -1,6 +1,8 @@
 # Built-in scrape function
+import os
 import threading
 import time
+import itertools as its
 from dataclasses import dataclass
 from datetime import datetime
 from numpy import append
@@ -8,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import hashlib
-
+from numba import jit
 
 from Objects import cobra_request_object
 from Objects.file_object import File
@@ -49,10 +51,10 @@ class Scraper:
         append_address = File('State/.address')
         address_list = append_address.read()
         if address not in address_list:
-            append_address.write(f'{address}\n')
+            append_address.append(f'{address}\n')
             user_data = Memory(address, raw_data, data, datetime.now()) # User data memory object #* Objects/memory_object.py
             saved_memory = File('.memory') # sends dataframe and raw data to memory #* Objects/file_object.py
-            saved_memory.write(repr(user_data))
+            saved_memory.append(repr(user_data))
         else:
             print('CONTENT ALREADY IN MEMORY')
         return None # returns a representation of the Memory Object
@@ -62,14 +64,13 @@ class Scraper:
         saved_file.write_excel(data)
 
 
-    
     def simple_scrape(self): # using the initial parameters run a web scrape process
         threads = []
         res = requests.get(self.url)
         src = res.content
         html = BeautifulSoup(src, 'lxml')
         results = html.findAll(f'{self.type}')
-        tables = pd.read_html(str(results)) # turn results into a list of tables
+        tables = pd.read_html(str(results), encoding=f'{res.encoding}') # turn results into a list of tables
         user_request = cobra_request_object.Cobra_Request(res.status_code, tables, res.elapsed) # place data into a request object
         start = time.perf_counter()
         for table in tables: # loop through the tables list write it to a file
@@ -88,12 +89,27 @@ class Scraper:
 
     def advanced_scrape():
         pass
-    
-    
-        
 
-    def python(): # complies the code into python #! MIGHT MAKE THIS IS OWN FOLDER
-        pass
+    def compile_to_python(self): # complies the code into python #! NOT ACTUALLY COMPILING
+        code = f'''
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+
+res = requests.get('{self.url}')
+src = res.content
+html = BeautifulSoup(src, 'lxml')
+results = html.findAll(f'{self.type}')
+tables = pd.read_html(str(results), encoding=f'{{res.encoding}}')
+count = 0
+for table in tables: # loop through the tables list write it to a file
+        with open(f'file_{{count}}.xlsx') as file:
+            file.write(table)
+        count += 1
+        '''
+        SOURCE_CODE = File('Compile_Test/compiled_cobra.py')
+        SOURCE_CODE.write(code)
 
 
 
@@ -107,4 +123,12 @@ if __name__ == '__main__':
     data = z.simple_scrape()
     a = Scraper('https://en.wikipedia.org/wiki/nfl')
     data = a.simple_scrape()
+    a.compile_to_python()
+
+
+    M = Memory()
+
+    # M.DUMP_ALL()
+
+
     # print(repr(data))
