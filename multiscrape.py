@@ -1,16 +1,21 @@
-# Built-in scrape function
 import os
 import threading
 import time
-import itertools as its
 from dataclasses import dataclass
 from datetime import datetime
-from numpy import append
+
+# Web Scraping 
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 import hashlib
-from numba import jit
+import shutil
+
+# Dataframes
+import pandas as pd
+
+# Image Matrix
+from PIL import Image
+from numpy import array
 
 from Objects import cobra_request_object
 from Objects.file_object import File
@@ -59,14 +64,28 @@ class Scraper:
             print('CONTENT ALREADY IN MEMORY')
         return None # returns a representation of the Memory Object
 
-    def __write_to_file(self, data):
+    def __write_to_file(self, data, content_type):
         saved_file  = File(f'Test/file_{datetime.now()}.{self.extension}')
-        saved_file.write_excel(data)
+        if content_type.find('text') != -1:
+            saved_file.write_excel(data)
+        else:
+            saved_file.write(str(data))
+
+    def __download_img(self, response, filename):
+        with open(filename, 'wb') as img:
+                shutil.copyfileobj(response.raw, img)
+        return img
 
 
-    def simple_scrape(self): # using the initial parameters run a web scrape process
+    def __img_to_marix(self, filename):
+        img = Image.open(filename)
+        matrix = array(img)
+        return matrix
+
+    def SMP_table_scrape(self): # using the initial parameters run a web scrape process
         threads = []
         res = requests.get(self.url)
+        content_type = res.headers['Content-Type']
         src = res.content
         html = BeautifulSoup(src, 'lxml')
         results = html.findAll(f'{self.type}')
@@ -75,7 +94,7 @@ class Scraper:
         start = time.perf_counter()
         for table in tables: # loop through the tables list write it to a file
             if self.filename == None:
-                t = threading.Thread(target=self.__write_to_file, args=[table])
+                t = threading.Thread(target=self.__write_to_file, args=[table, content_type])
                 t.start()
                 threads.append(t)
         for thread in threads:
@@ -87,8 +106,34 @@ class Scraper:
         print(f'Data Tables Found: {len(tables)}')
         return user_request
 
-    def advanced_scrape():
+    def ADV_table_scrape():
         pass
+
+    def SMP_img_scrape(self):
+        threads = []
+        res = requests.get(self.url)
+        src = res.content
+        html = BeautifulSoup(src, 'lxml')
+        images = html.findAll(f'img')
+        user_request = cobra_request_object.Cobra_Request(res.status_code, images, res.elapsed) # place data into a request object
+        start = time.perf_counter()
+        for image in images[1:]: # loop through the tables list write it to a file
+            url = image.attrs['src']
+            response = requests.get(url, stream=True)
+            filename = f'Test/{datetime.now()}.jpg'
+            content_type = response.headers['Content-Type']
+            self.__download_img(response, filename)
+            matrix = self.__img_to_marix(filename)
+            if self.filename == None:
+                t = threading.Thread(target=self.__write_to_file, args=[matrix, content_type])
+                t.start()
+                threads.append(t)
+        for thread in threads:
+            thread.join()
+        end = time.perf_counter()
+        print(end - start)
+        print(f'Images Found: {len(images)}')
+        return user_request
 
     def compile_to_python(self): # complies the code into python #! NOT ACTUALLY COMPILING
         code = f'''
@@ -115,18 +160,19 @@ for table in tables: # loop through the tables list write it to a file
 
 
 if __name__ == '__main__':
-    x = Scraper('https://en.wikipedia.org/wiki/Computer_science')
-    data = x.simple_scrape()
-    y = Scraper('https://en.wikipedia.org/wiki/Miami_Dolphins')
-    data = y.simple_scrape()
-    z= Scraper('https://en.wikipedia.org/wiki/Baltimore_Ravens')
-    data = z.simple_scrape()
+    # x = Scraper('https://en.wikipedia.org/wiki/Computer_science')
+    # data = x.SMP_table_scrape()
+    # y = Scraper('https://en.wikipedia.org/wiki/Miami_Dolphins')
+    # data = y.SMP_table_scrape()
+    # z= Scraper('https://en.wikipedia.org/wiki/Baltimore_Ravens')
+    # data = z.SMP_table_scrape()
     a = Scraper('https://en.wikipedia.org/wiki/nfl')
-    data = a.simple_scrape()
-    a.compile_to_python()
+    data = a.SMP_table_scrape()
+    # a.compile_to_python()
 
+    img = Scraper('https://www.google.com/search?q=google&sxsrf=ALiCzsa-QwM3tL-xS-jwzHaXehKYQJbHwA:1654465152283&source=lnms&tbm=isch&sa=X&ved=2ahUKEwigscf9opf4AhXDZzABHVfODAUQ_AUoBHoECAIQBg&biw=1440&bih=821&dpr=2', extension='txt')
+    img.SMP_img_scrape()
 
-    M = Memory()
 
     # M.DUMP_ALL()
 
