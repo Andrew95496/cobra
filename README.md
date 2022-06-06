@@ -36,7 +36,7 @@
   <h3 align="center">Cobra</h3>
 
   <p align="center">
-    A fast multithreaded data scrapper built upon the Beautiful Soup library.
+    A fast multithreaded data engine built upon the Beautiful Soup library.
     <br />
     <a href="https://github.com/Andrew95496/cobra"><strong>Explore the docs »</strong></a>
     <br />
