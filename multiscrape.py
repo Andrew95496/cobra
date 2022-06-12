@@ -1,6 +1,4 @@
-import sys
 import threading
-import time
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -8,7 +6,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import hashlib
-import shutil
+# import shutil
 
 # Dataframes
 import pandas as pd
@@ -36,7 +34,8 @@ class Scraper:
     # @param type: type of object to create [ table | image | url ]
     # @param extension: file extension to create Default: xlsx
     # @param find_all: Find all table in url
-    def __init__(self, url, filename=None,
+    def __init__(self, url, 
+                filename=None,
                 type='table',
                 extension='xlsx',
                 find_all=True):
@@ -84,7 +83,7 @@ class Scraper:
     #     img = Image.open(filename)
     #     matrix = array(img)
     #     return matrix
-
+    
     def SMP_table_scrape(self):                                           # using the initial parameters run a web scrape process
         threads = []
         res = requests.get(self.url)
@@ -100,7 +99,6 @@ class Scraper:
             return None
         user_request = cobra_request_object.Cobra_Request(
             res.status_code, tables, res.elapsed)                         # place data into a request object
-        start = time.perf_counter()
         for table in tables:                                              # loop through the tables list write it to a file
             if self.filename == None:
                 t = threading.Thread(target=self.__write_to_file, 
@@ -109,8 +107,6 @@ class Scraper:
                 threads.append(t)
         for thread in threads:
             thread.join()
-        end = time.perf_counter()
-        print(end - start)
         self.save_to_memory(0, tables)                                     # saved_file.write_excel(table)
         print(f'Data Tables Found: {len(tables)}')
         return user_request
