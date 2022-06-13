@@ -1,5 +1,8 @@
 from tkinter import *
 from PIL import ImageTk, Image
+
+# TODO: number the tables that you get back, use a button to show a graph of the table 
+
 class Plot:
 
     def __init__(self, data) -> None:
