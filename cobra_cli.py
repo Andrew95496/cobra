@@ -8,7 +8,8 @@ from multiscrape import Scraper
 
 
 
-parser = argparse.ArgumentParser(description='Multithreaded Command Line Data Engine to collect Dataframes from the Internet')
+parser = argparse.ArgumentParser(description='Multithreaded Command Line Data Engine to collect Dataframes from the Internet',
+                                epilog='Report Issues: https://github.com/Andrew95496/cobra/issues')
 
 #* STANDARD ARGUMENTS
 parser.add_argument('url', help='specific URL you want to scrape') 
