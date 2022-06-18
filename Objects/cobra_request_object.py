@@ -4,9 +4,10 @@ from datetime import datetime
 @dataclass
 class Cobra_Request:
 
-    def __init__(self, response, contents, runtime):
+    def __init__(self, response, contents, metadata, runtime):
         self.response = response
         self.contents = contents
+        self.metadata = metadata
         self.init = datetime.now()
         self.runtime = runtime
 
@@ -14,6 +15,7 @@ class Cobra_Request:
         rep = f'''Initialization: {self.init}\n
 Response: {self.response}\n
 Contents: {self.contents}\n
+Metadata: {self.metadata}
 Runtime: {self.runtime}\n
         '''
         return rep

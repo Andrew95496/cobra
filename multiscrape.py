@@ -1,6 +1,7 @@
 import threading
 from dataclasses import dataclass
 from datetime import datetime
+import dis
 
 # Web Scraping
 import requests
@@ -98,7 +99,7 @@ class Scraper:
             print(f'NO TABLES FOUND')
             return None
         user_request = cobra_request_object.Cobra_Request(
-            res.status_code, tables, res.elapsed)                         # place data into a request object
+            res.status_code, tables, len(tables),res.elapsed)                         # place data into a request object
         for table in tables:                                              # loop through the tables list write it to a file
             if self.filename == None:
                 t = threading.Thread(target=self.__write_to_file, 
@@ -166,22 +167,5 @@ for table in tables: # loop through the tables list write it to a file
 
 
 if __name__ == '__main__':
-    # x = Scraper('https://en.wikipedia.org/wiki/Computer_science')
-    # data = x.SMP_table_scrape()
-    # y = Scraper('https://en.wikipedia.org/wiki/Miami_Dolphins')
-    # data = y.SMP_table_scrape()
-    # z= Scraper('https://en.wikipedia.org/wiki/Baltimore_Ravens')
-    # data = z.SMP_table_scrape()
-    # a = Scraper('https://en.wikipedia.org/wiki/nfl')
-    # data = a.SMP_table_scrape()
-    # a.compile_to_python()
-
-    # img = Scraper('https://www.google.com/search?q=google&sxsrf=ALiCzsa-QwM3tL-xS-jwzHaXehKYQJbHwA:1654465152283&source=lnms&tbm=isch&sa=X&ved=2ahUKEwigscf9opf4AhXDZzABHVfODAUQ_AUoBHoECAIQBg&biw=1440&bih=821&dpr=2', extension='txt')
-    # img.SMP_img_scrape()
-    
-    q = Scraper('https://www.google.com/search?q=assembly+books&oq=assembly+books&aqs=chrome..69i57j0i512j0i10i22i30j0i22i30j0i15i22i30j0i22i30l4j0i15i22i30.6416j0j4&sourceid=chrome&ie=UTF-8')
-    q.SMP_table_scrape()
-
-    # M.DUMP_ALL()
-
-    # print(repr(data))
+   x = Scraper('https://en.wikipedia.org/wiki/1934_U.S._National_Championships_(tennis)')
+   x.SMP_table_scrape()
