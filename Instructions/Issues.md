@@ -13,7 +13,13 @@ Source code issues relate to issues such as Speed (algorithm/ library choices ex
 
 User issues will be prefixed with *usri:*
 
-`usri: data that I export to Excel do not open`
+`usri: data that I export to Excel does not open`
+
+## Documentation Issues
+
+Documentation issues will be prefixed with *doc:*
+
+`doc: Cobra Request Object needs cleaner explanation`
 
 
 
