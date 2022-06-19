@@ -5,6 +5,8 @@ from PIL import ImageTk, Image
 
 class Plot:
 
+    __slots__ = ('data')
+
     def __init__(self, data) -> None:
         self.data = data
 

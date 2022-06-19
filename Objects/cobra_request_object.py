@@ -1,8 +1,14 @@
 from dataclasses import dataclass
 from datetime import datetime
+"""
+Cobra Request Object - Information about a scrape will be stored in the request object
+# Returned by all scraper functions in ../ multiscrape.py
+"""
 
 @dataclass
 class Cobra_Request:
+
+    __slots__ = ('response', 'contents', 'metadata', 'init', 'runtime')
 
     def __init__(self, response, contents, metadata, runtime):
         self.response = response
@@ -24,6 +30,6 @@ Runtime: {self.runtime}\n
 
 if __name__ == '__main__':
 
-    x = Cobra_Request('200', '<span class="search-highlight">WU Poster LaTeX Template</span>')
+    x = Cobra_Request('200', '<span class="search-highlight">WU Poster LaTeX Template</span>', 'NULL', '2.000')
     
-    print(x)
+    print(x.__slots__.__sizeof__())

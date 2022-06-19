@@ -4,6 +4,8 @@ from dataclasses import dataclass
 @dataclass
 class Memory:
 
+    __slots__ = ('address', 'raw_data', 'data', 'initialization')
+
     def __init__(self, address=None, raw_data=None, data=None, initialization=None):
         self.address = address
         self.raw_data = raw_data

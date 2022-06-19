@@ -35,11 +35,15 @@ class Scraper:
     # @param type: type of object to create [ table | image | url ]
     # @param extension: file extension to create Default: xlsx
     # @param find_all: Find all table in url
-    def __init__(self, url, 
+
+    __slots__ = ('url', 'filename', 'type', 'extension', 'find_all')
+    def __init__(self, 
+                url, 
                 filename=None,
                 type='table',
                 extension='xlsx',
                 find_all=True):
+
         self.url = url
         self.filename = filename
         self.type = type

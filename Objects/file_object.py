@@ -2,6 +2,8 @@ from dataclasses import dataclass
 import itertools as its
 @dataclass
 class File:
+
+    __slots__ = ('filename')
     
     def __init__(self, filename):
         self.filename = filename
