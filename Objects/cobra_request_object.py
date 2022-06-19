@@ -11,15 +11,14 @@ class Cobra_Request:
         self.init = datetime.now()
         self.runtime = runtime
 
-    def __repr__(self):
-        rep = f'''Initialization: {self.init}\n
+    def __str__(self) -> str:
+        request_object = f'''Initialization: {self.init}\n
 Response: {self.response}\n
 Contents: {self.contents}\n
 Metadata: {self.metadata}
 Runtime: {self.runtime}\n
         '''
-        return rep
-
+        return request_object
     
 
 

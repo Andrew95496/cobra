@@ -63,7 +63,7 @@ class Scraper:
             append_address.append(f'{address}\n')
             user_data = Memory(address, raw_data, data, datetime.now())  # User data memory object #* Objects/memory_object.py
             saved_memory = File('.memory')                               # sends Dataframe and raw data to memory #* Objects/file_object.py
-            saved_memory.append(repr(user_data))
+            saved_memory.append(str(user_data))
         else:
             print('CONTENT ALREADY IN MEMORY')
         return None                                                      # returns a representation of the Memory Object
@@ -167,5 +167,8 @@ for table in tables: # loop through the tables list write it to a file
 
 
 if __name__ == '__main__':
-   x = Scraper('https://en.wikipedia.org/wiki/1934_U.S._National_Championships_(tennis)')
-   x.SMP_table_scrape()
+    x = Scraper('https://en.wikipedia.org/wiki/1934_U.S._National_Championships_(tennis)')
+    x.SMP_table_scrape()
+    
+    # DUMP = Memory()
+    # DUMP.DUMP_ALL()

@@ -10,7 +10,7 @@ class Memory:
         self.data = data
         self.initialization = initialization
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         rep = f'''Address: {self.address}\nRaw Contents: {self.raw_data}\nContents:\n{self.data}\nTime: {self.initialization}\n'''
         return rep
 
