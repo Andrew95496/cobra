@@ -23,8 +23,8 @@ from Objects.memory_object import Memory
 # * USEFUL methods
 
 # res.elapsed
-#  res.headers
-#
+# res.headers
+
 
 
 @dataclass
@@ -84,7 +84,7 @@ class Scraper:
     #         shutil.copyfileobj(response.raw, img)
     #     return img
 
-    # def __img_to_marix(self, filename):
+    # def __img_to_matrix(self, filename):
     #     img = Image.open(filename)
     #     matrix = array(img)
     #     return matrix
@@ -102,8 +102,12 @@ class Scraper:
         except ValueError:
             print(f'NO TABLES FOUND')
             return None
-        user_request = cobra_request_object.Cobra_Request(
-            res.status_code, tables, len(tables),res.elapsed)                         # place data into a request object
+        user_request = cobra_request_object.Cobra_Request(                # place data into a request object
+            res.status_code, 
+            {f'table{num + 1}': table for num, table in enumerate(tables)}, 
+            len(tables),
+            res.elapsed)
+        print(user_request.__str__()) 
         for table in tables:                                              # loop through the tables list write it to a file
             if self.filename == None:
                 t = threading.Thread(target=self.__write_to_file, 
