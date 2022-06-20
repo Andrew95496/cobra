@@ -19,6 +19,7 @@ from numpy import array
 from Objects import cobra_request_object
 from Objects.file_object import File
 from Objects.memory_object import Memory
+from Objects.plot_object import Plot
 
 # * USEFUL methods
 
@@ -37,7 +38,8 @@ class Scraper:
     # @param find_all: Find all table in url
 
     __slots__ = ('url', 'filename', 'type', 'extension', 'find_all')
-    def __init__(self, 
+    def __init__(
+                self, 
                 url, 
                 filename=None,
                 type='table',
@@ -107,7 +109,7 @@ class Scraper:
             {f'table{num + 1}': table for num, table in enumerate(tables)}, 
             len(tables),
             res.elapsed)
-        print(user_request.__str__()) 
+
         for table in tables:                                              # loop through the tables list write it to a file
             if self.filename == None:
                 t = threading.Thread(target=self.__write_to_file, 
@@ -175,8 +177,13 @@ for table in tables: # loop through the tables list write it to a file
 
 
 if __name__ == '__main__':
-    x = Scraper('https://en.wikipedia.org/wiki/1934_U.S._National_Championships_(tennis)')
-    x.SMP_table_scrape()
+    x = Scraper('https://en.wikipedia.org/wiki/ADCC_Submission_Fighting_World_Championship')
+    data = x.SMP_table_scrape()
+    i = data.contents
+    for key, value in i.items():
+        i[key] = value.astype('category')
+    plot = Plot(i)
+    plot.create_view()
     
     # DUMP = Memory()
     # DUMP.DUMP_ALL()
