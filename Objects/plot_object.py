@@ -2,8 +2,6 @@ from tkinter import *
 from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 
-# TODO: number the tables that you get back, use a button to show a graph of the table 
-
 class Plot:
 
     __slots__ = ('data_dict')
@@ -12,8 +10,11 @@ class Plot:
         self.data_dict = data_dict
 
     def _create_graph(self, data):
-        plt.hist(data)
         print(data)
+        try:                                #! ONLY DID THIS TO SEE IF DIFFERENT DATAFRAMES ARE BEING READ
+            plt.hist(data)
+        except ImportError:
+            print('')
         plt.show()
 
 
@@ -21,9 +22,9 @@ class Plot:
         root = Tk()
         root.title('Cobra MetaData')
         root.geometry('400x200')
-        for name, data in self.data_dict.items():
-            print(data)
-            Button(root, text=f'{name}', command=lambda: self._create_graph(data)).pack()
+        for name in self.data_dict.keys():
+            my_button = Button(root, text=name, command=lambda data = self.data_dict[name]: self._create_graph(data))
+            my_button.pack()
         root.mainloop()
 
     
