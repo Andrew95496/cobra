@@ -1,7 +1,6 @@
 from tkinter import *
 from PIL import ImageTk, Image
-import matplotlib.pyplot as plt
-
+import plotly.express as px
 class Plot:
 
     __slots__ = ('data_dict')
@@ -12,10 +11,11 @@ class Plot:
     def _create_graph(self, data):
         print(data)
         try:                                #! ONLY DID THIS TO SEE IF DIFFERENT DATAFRAMES ARE BEING READ
-            plt.hist(data)
-        except ImportError:
-            print('')
-        plt.show()
+            fig = px.histogram(data, nbins=50)
+            fig.show()
+        except:
+            pass
+        
 
 
     def create_view(self):
