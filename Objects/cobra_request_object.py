@@ -5,10 +5,12 @@ Cobra Request Object - Information about a scrape will be stored in the request 
 # Returned by all scraper functions in ../ multiscrape.py
 """
 
-@dataclass
+@dataclass(slots=True)
 class Cobra_Request:
 
-    __slots__ = ('response', 'contents', 'metadata', 'init', 'runtime')
+
+    def __call__(self):
+        print('Request Object was made')
 
     def __init__(self, response, contents, metadata, runtime):
         self.response = response
@@ -16,6 +18,7 @@ class Cobra_Request:
         self.metadata = metadata
         self.init = datetime.now()
         self.runtime = runtime
+        self.__call__()
 
     def __str__(self) -> str:
         request_object = f'''Initialization: {self.init}\n
@@ -25,8 +28,6 @@ Metadata: {self.metadata}
 Runtime: {self.runtime}\n
         '''
         return request_object
-    
-
 
 if __name__ == '__main__':
 

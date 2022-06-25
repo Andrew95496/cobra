@@ -1,10 +1,8 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class Data:
-    
-    __slots__ = ('contents')
-    
+        
     def __init__(self, contents):
         self.contents = contents

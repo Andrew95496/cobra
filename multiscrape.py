@@ -28,7 +28,7 @@ from Objects.plot_object import Plot
 
 
 
-@dataclass
+@dataclass(slots=True)
 class Scraper:
     # Initializing the scraper object. URL is the only non optional parameter.
     # @param url: specific url of the site you want to be scraped
@@ -37,7 +37,6 @@ class Scraper:
     # @param extension: file extension to create Default: xlsx
     # @param find_all: Find all table in url
 
-    __slots__ = ('url', 'filename', 'type', 'extension', 'find_all')
     def __init__(
                 self, 
                 url, 
@@ -101,6 +100,7 @@ class Scraper:
         # turn results into a list of tables                              # if the scrape returns none exit code
         try:
             tables = pd.read_html(str(results))
+            
         except ValueError:
             print(f'NO TABLES FOUND')
             return None

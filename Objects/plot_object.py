@@ -1,12 +1,19 @@
+from dataclasses import dataclass
 from tkinter import *
 from PIL import ImageTk, Image
 import plotly.express as px
+
+
+@dataclass(slots=True)
 class Plot:
 
-    __slots__ = ('data_dict')
+
+    def __call__(self):
+        print('Plot Object made')
 
     def __init__(self, data_dict) -> None:
         self.data_dict = data_dict
+        self.__call__()
 
     def _create_graph(self, data):
         print(data)

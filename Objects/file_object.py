@@ -1,12 +1,14 @@
 from dataclasses import dataclass
-import itertools as its
-@dataclass
+@dataclass(slots=True)
 class File:
 
-    __slots__ = ('filename')
+
+    def __call__(self):
+        print('File Object made')
     
     def __init__(self, filename):
         self.filename = filename
+        self.__call__()
 
     def append(self, data):
         with open(f'{self.filename}', 'a') as file: 
